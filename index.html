@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document Redaction Engine</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <span class="logo-icon">🔐</span>
+      <div>
+        <h1>REDACT<span class="accent">•</span>ENGINE</h1>
+        <p class="tagline">DOCUMENT PROCESSING SYSTEM</p>
+      </div>
+    </div>
+    
+  </header>
+
+  <main>
+    <!-- Left Panel -->
+    <section class="panel input-panel">
+      <div class="panel-header">
+        <span class="panel-label"> INPUT DOCUMENT   </span>
+        <div class="status-dot"></div>
+      </div>
+
+      <textarea id="rawInput" placeholder="Paste raw document text here...
+
+Example:
+John Smith received $15,000 from the defendant Mary Johnson on March 4th. The settlement of $250,000 was agreed upon by both parties. Contact Robert Davis at the firm for further details."></textarea>
+
+      <div class="auto-detect-row">
+        <label class="auto-toggle">
+          <input type="checkbox" id="autoDetectToggle" checked />
+          <span class="auto-slider"></span>
+          <span class="auto-label">Auto-detect names &amp; monetary values</span>
+        </label>
+      </div>
+
+      <button id="analyzeBtn" class="analyze-btn">
+        <span class="btn-icon">&#9672;</span>
+        ANALYZE DOCUMENT
+        <span class="btn-arrow">&#8594;</span>
+      </button>
+
+      <div class="search-box">
+        <div class="search-title">SEARCH &amp; REDACT</div>
+        <div class="search-row">
+          <input type="text" id="searchInput" placeholder="Type a word to find and redact..." />
+          <button id="searchRedactBtn" class="search-btn">REDACT</button>
+        </div>
+        <div id="searchFeedback" class="search-feedback"></div>
+      </div>
+
+      <div class="hint-box">
+        <span class="hint-icon">!</span>
+        <p>Click any word to redact it. Press <strong>Ctrl+Z</strong> to undo.</p>
+      </div>
+    </section>
+
+    <!-- Center Panel -->
+    <section class="panel output-panel">
+      <div class="panel-header">
+        <span class="panel-label"> PROCESSED OUTPUT </span>
+        <div class="status-dot" id="outputDot"></div>
+      </div>
+      <div id="outputBox" class="output-box">
+        <div class="empty-state">
+          <div class="empty-icon">&#9645;</div>
+          <p>Processed document will appear here</p>
+          <p class="empty-sub">Paste text and click Analyze to begin</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="panel-header">
+        <span class="panel-label"> CONTROLS </span>
+        <div class="status-dot"></div>
+      </div>
+
+      <div class="counter-card">
+        <p class="counter-label">WORDS REDACTED</p>
+        <div class="counter-value" id="redactCount">0</div>
+        <div class="counter-bar"><div class="counter-fill" id="counterFill"></div></div>
+      </div>
+
+      <div class="toggle-card">
+        <div class="toggle-info">
+          <p class="toggle-label">REVEAL ALL</p>
+          <p class="toggle-sub">Show hidden content in red</p>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="revealToggle" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="action-card">
+        <button class="action-btn clear-btn" id="clearAllBtn">&#10005; CLEAR ALL REDACTIONS</button>
+        <button class="action-btn redact-all-btn" id="redactAllBtn">&#9724; REDACT ALL WORDS</button>
+        <button class="action-btn undo-btn" id="undoBtn" disabled>&#8617; UNDO LAST ACTION</button>
+      </div>
+
+      <div class="export-card">
+        <p class="counter-label" style="margin-bottom:10px;">EXPORT DOCUMENT</p>
+        <button class="action-btn export-btn" id="exportTxtBtn">&#8681; EXPORT AS .TXT</button>
+        <button class="action-btn export-pdf-btn" id="exportPdfBtn">&#8681; EXPORT AS .PDF</button>
+      </div>
+
+      <div class="history-card">
+        <p class="counter-label" style="margin-bottom:8px;">REDACTION HISTORY</p>
+        <div id="historyList" class="history-list">
+          <p class="history-empty">No actions yet</p>
+        </div>
+      </div>
+
+      <div class="legend">
+        <p class="legend-title">LEGEND</p>
+        <div class="legend-item"><span class="legend-swatch normal"></span><span>Original word</span></div>
+        <div class="legend-item"><span class="legend-swatch redacted"></span><span>Redacted word</span></div>
+        <div class="legend-item"><span class="legend-swatch auto"></span><span>Auto-detected</span></div>
+        <div class="legend-item"><span class="legend-swatch revealed"></span><span>Revealed</span></div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- About Section -->
+  <section class="about-section" id="about">
+    <div class="about-inner">
+      <div class="section-tag">// ABOUT THE SYSTEM</div>
+      <h2 class="section-title">What is <span class="grad-text">Redact Engine?</span></h2>
+      <p class="section-desc">
+        The <strong>Document Redaction Engine</strong> is a powerful browser-based tool built for legal departments, compliance teams, and data privacy professionals. It allows users to safely redact sensitive names, monetary values, and confidential information from plain-text documents before public release.
+      </p>
+      <div class="about-cards">
+        <div class="about-card">
+          <div class="about-card-icon">&#128269;</div>
+          <h3>Auto Detection</h3>
+          <p>Automatically identifies sensitive names and monetary values using intelligent pattern recognition.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">&#128432;</div>
+          <h3>Click to Redact</h3>
+          <p>Every word is individually clickable. Redact or restore any word instantly with a single click.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">&#8617;</div>
+          <h3>Undo History</h3>
+          <p>Full undo stack with Ctrl+Z support. Every action is logged with a timestamp.</p>
+        </div>
+        <div class="about-card">
+          <div class="about-card-icon">&#8681;</div>
+          <h3>Export Ready</h3>
+          <p>Download your redacted document as a clean <strong>.TXT</strong> or formatted <strong>.PDF</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section" id="contact">
+    <div class="contact-inner">
+      <div class="section-tag">// CONTACT US</div>
+      <h2 class="section-title">Get In <span class="grad-text">Touch</span></h2>
+      <p class="section-desc">Have questions, feedback, or want to report an issue? Reach out to the Redact Engine team.</p>
+
+      <div class="contact-grid">
+        <div class="contact-form-box">
+          <div class="form-group">
+            <label class="form-label">YOUR NAME</label>
+            <input type="text" id="contactName" class="form-input" placeholder="e.g. John Smith" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">EMAIL ADDRESS</label>
+            <input type="email" id="contactEmail" class="form-input" placeholder="e.g. john@lawfirm.com" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">SUBJECT</label>
+            <input type="text" id="contactSubject" class="form-input" placeholder="e.g. Feature Request" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">MESSAGE</label>
+            <textarea id="contactMessage" class="form-input form-textarea" placeholder="Write your message here..."></textarea>
+          </div>
+          <div id="contactFeedback" class="contact-feedback"></div>
+          <button class="contact-submit-btn" id="contactSubmitBtn">
+            &#9672; SEND MESSAGE &#8594;
+          </button>
+        </div>
+
+        <div class="contact-info">
+          <div class="contact-info-card">
+            <div class="ci-icon">&#128231;</div>
+            <div>
+              <p class="ci-label">EMAIL</p>
+              <p class="ci-value">brocode@srmist.edu.in</p>
+            </div>
+          </div>
+          <div class="contact-info-card">
+            <div class="ci-icon">&#127970;</div>
+            <div>
+              <p class="ci-label">DEPARTMENT</p>
+              <p class="ci-value">CSE DS C</p>
+            </div>
+          </div>
+          <div class="contact-info-card">
+            <div class="ci-icon">&#128336;</div>
+            <div>
+              <p class="ci-label">SUPPORT HOURS</p>
+              <p class="ci-value">Mon - Fri, 9AM - 9PM</p>
+            </div>
+          </div>
+          <div class="contact-info-card">
+            <div class="ci-icon">&#128274;</div>
+            <div>
+              <p class="ci-label">SECURITY</p>
+              <p class="ci-value">All data processed locally. Nothing is sent to any server.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="team-section" id="team">
+    <div class="team-inner">
+      <div class="section-tag">// THE TEAM</div>
+      <h2 class="section-title">Built by <span class="grad-text">BroCode</span></h2>
+      <p class="section-desc">A passionate team of developers who built Redact Engine during their hackathon — combining legal tech, smart UI design, and clean code.</p>
+
+      <div class="team-cards">
+        <div class="team-card">
+          <div class="team-avatar">AR</div>
+          <div class="team-glow"></div>
+          <h3 class="team-name">Abhishek Kumar Rajput</h3>
+          <p class="team-role">Developer</p>
+          <div class="team-badge">&#9672; TEAM MEMBER</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">PB</div>
+          <div class="team-glow"></div>
+          <h3 class="team-name">Protim Biswas</h3>
+          <p class="team-role">Developer</p>
+          <div class="team-badge">&#9672; TEAM MEMBER</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">RT</div>
+          <div class="team-glow"></div>
+          <h3 class="team-name">Rajat Tyagi</h3>
+          <p class="team-role">Developer</p>
+          <div class="team-badge">&#9672; TEAM MEMBER</div>
+        </div>
+      </div>
+
+      <div class="team-footer-tag">
+        <span class="group-label">GROUP</span>
+        <span class="group-name">BroCode</span>
+        <span class="group-divider">|</span>
+        <span class="group-label">HACKATHON PROJECT</span>
+        <span class="group-label">2026</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>DOCUMENT REDACTION ENGINE v2.0 &nbsp;|&nbsp; FOR INTERNAL LEGAL USE ONLY &nbsp;|&nbsp; UNAUTHORIZED ACCESS IS PROHIBITED</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
