@@ -4,7 +4,7 @@ A browser-based tool to safely redact sensitive names and monetary values from p
 The Challenge:
 Build an interactive text-processing interface.
 Requirements: A large <textarea> for pasting raw text, and an "Analyze" button. Below it, an
-"Output Box" (a <div>) that displays the processed text. A sidebar with a counter showing
+"Output Box" (a<div>) that displays the processed text. A sidebar with a counter showing
 "Words Redacted: 0" and a "Reveal All" toggle switch.
 Interactivity (The Catch - AI Proofing): 
 1. Click-to-Redact: When the user clicks "Analyze", the
